@@ -1,7 +1,7 @@
  /************************************************************************************************************************************
- * Programa: Indio	
+ * Programa: Rede Ótica	
  * 
- * Descriçao:  Programa que implementa o algoritmo de Kruskall para resolver o "Problema da árvore geradora de mínimo" sob o contexto
+ * Descriçao:  Programa implementado em C para resolver o "Problema da árvore geradora de mínimo" sob o contexto
  * de uma ligação de fibra ótica entre duas tabas de um ramo de rede. 
  *
  * Autores:  Bruno Sastre     Felipe Aversoni
@@ -13,8 +13,18 @@
 #include <conio.h>
 
 #define TAM_MAXIMO 128
+#define MAX_N 100
+
+
+typedef struct {
+  int custo;
+  int v1, v2;
+} Aresta;
 
 void imprimir_logo(FILE *impArq);
+void compInit(); //Inicializa os componentes para a struct
+void compUni(int, int); //Uniao dos componentes
+int sameComp(int, int );
 
 int main()
 {
@@ -48,3 +58,6 @@ int main()
     while(fgets(read_string,sizeof(read_string),impArq) != NULL)
         printf("%s",read_string);
     }
+	
+
+
