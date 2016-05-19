@@ -22,7 +22,7 @@ typedef struct { //Definição do novo tipo Aresta
 } Aresta; 
 
 typedef struct Componente { //Definicao do tipo Componente
-  struct Componente *prox;
+  struct Componente *next;
 } Componente;
 
 void imprimir_logo(FILE *impArq);
@@ -41,7 +41,9 @@ int treeSize;
 
 int main()
 {
-    int i, t=1, a, b;
+ 
+   int register i;
+   int t=1, a, b;
 	
     //Impressao logo  
     char *nome_arquivo = "imagem.txt"; //variavel que possui o nome do arquivo que carega o arquivo com o logo, autores etc
@@ -59,7 +61,45 @@ int main()
     fclose(impArq);
     printf("\n");
    
-   
+   printf("Digite a entrada\n\n");
+   scanf("%d %d\n", &n, &m);
+  
+  while(n!=0){
+              
+    treeSize=0;//tamanho da arvore
+    compInit();
+    
+    for(i=0; i<m; i++)
+    {
+      scanf("%d %d %d\n", &a, &b, &aresta[i].custo);
+       
+      if(a < b)
+      {
+        aresta[i].v1 = a-1; aresta[i].v2 = b-1;
+      }
+      else
+      {
+        aresta[i].v1 = b-1; aresta[i].v2 = a-1;
+      }
+    }
+    
+    qsort(aresta, m, sizeof(Aresta), compare);
+
+    printf("\n\tConjunto de teste %d\n", t);
+    for(i=0; treeSize<n-1; i++)
+      if(!sameComp(aresta[i].v1, aresta[i].v2))
+      {
+	printf("%d %d\n", aresta[i].v1+1, aresta[i].v2+1);
+	compUni(aresta[i].v1, aresta[i].v2); 
+	treeSize++;
+      }
+
+    printf("\n");
+    printf("Digite novos dados para a entrada\n\n");
+    scanf("%d %d\n", &n, &m);
+    t++;
+  }
+
 
   system("pause");
 }
@@ -87,7 +127,7 @@ int main()
 	  int i;
 	  for(i=0; i<n; i++){
 		componente[i]=(Componente *)malloc(sizeof(Componente));
-		componente[i]->prox=NULL;
+		componente[i]->next=NULL;
 	  }
 	}
 	//Uniao dos componentes
@@ -96,23 +136,23 @@ int main()
 	  Componente *Comp;
 	  Comp=(Componente *)malloc(sizeof(Componente));//alocacao de memoria para Componente
 	  
-	  Comp->prox=NULL;
+	  Comp->next=NULL;
 	  
-	  componente[v1]->prox=Comp;
-	  componente[v2]->prox=Comp;
+	  componente[v1]->next=Comp;
+	  componente[v2]->next=Comp;
 	}
 
 	int sameComp(int v1, int v2){
         
-	  Componente *Comp_v1, *Comp_v2; //recebimento dos componentes
+	  Componente *Cv1, *Cv2; //recebimento dos componentes
 
-	  for(Comp_v1=componente[v1]; Comp_v1->prox!=NULL; Comp_v1=Comp_v1->prox);
+	  for(Cv1=componente[v1]; Cv1->next!=NULL; Cv1=Cv1->next);
 	  
-	  for(Comp_v2=componente[v2]; Comp_v2->prox!=NULL; Comp_v2=Comp_v2->prox);
+	  for(Cv2=componente[v2]; Cv2->next!=NULL; Cv2=Cv2->next);
 	  
       //Arvore sendo compactada
-	  componente[v1]=Comp_v1; 
-	  componente[v2]=Comp_v2;
+	  componente[v1]=Cv1; 
+	  componente[v2]=Cv2;
 	 
-	  return (Comp_v1==Comp_v2 && Comp_v1!=NULL); 
+	  return (Cv1==Cv2 && Cv1!=NULL); 
 	}
