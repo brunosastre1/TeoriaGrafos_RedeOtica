@@ -13,22 +13,36 @@
 #include <conio.h>
 
 #define TAM_MAXIMO 128
-#define MAX_N 100
+#define A_MAX 100
 
 
-typedef struct {
-  int custo;
-  int v1, v2;
-} Aresta;
+typedef struct { //Definição do novo tipo Aresta
+  int custo; //sera armazenado o valor do custo minimo
+  int v1, v2; //declaracao dos vertices
+} Aresta; 
+
+typedef struct Componente { //Definicao do tipo Componente
+  struct Componente *prox;
+} Componente;
 
 void imprimir_logo(FILE *impArq);
 void compInit(); //Inicializa os componentes para a struct
 void compUni(int, int); //Uniao dos componentes
 int sameComp(int, int );
+int compare(const void *, const void *); //Compara arestas
+
+int n, m;
+
+Aresta aresta[A_MAX * (A_MAX-1) /2];
+
+Componente *componente[A_MAX]; 
+
+int treeSize;
 
 int main()
 {
-    
+    int i;
+	
     //Impressao logo  
     char *nome_arquivo = "imagem.txt"; //variavel que possui o nome do arquivo que carega o arquivo com o logo, autores etc
     FILE *impArq = NULL;
@@ -59,5 +73,45 @@ int main()
         printf("%s",read_string);
     }
 	
+	//Compara arestas
+	int compare(const void *a, const void *b){
+		  Aresta *A=(Aresta*)a, *B=(Aresta*)b;
 
+		  if( A->custo > B->custo ) return +1;
+		  else if ( A->custo < B-> custo ) return -1;
+		  else return 0;
+	}
+	//Inicializa os componentes para a struct
+	void compInit(){
+	  int i;
+	  for(i=0; i<n; i++){
+		componente[i]=malloc(sizeof(Componente));
+		componente[i]->prox=NULL;
+	  }
+	}
+	//Uniao dos componentes
+	void compUni(int v1, int v2){
+	  
+	  Componente *Comp;
+	  Comp=malloc(sizeof(Componente));//alocacao de memoria para Componente
+	  
+	  Comp->prox=NULL;
+	  
+	  componente[v1]->prox=Comp;
+	  componente[v2]->prox=Comp;
+	}
 
+	int sameComp(int v1, int v2){
+        
+	  Componente *Comp_v1, *Comp_v2; //recebimento dos componentes
+
+	  for(Comp_v1=componente[v1]; Comp_v1->prox!=NULL; Comp_v1=Comp_v1->prox);
+	  
+	  for(Comp_v2=componente[v2]; Comp_v2->prox!=NULL; Comp_v2=Comp_v2->prox);
+	  
+      //Arvore sendo compactada
+	  componente[v1]=Comp_v1; 
+	  componente[v2]=Comp_v2;
+	 
+	  return (Comp_v1==Comp_v2 && Comp_v1!=NULL); 
+	}
