@@ -41,7 +41,7 @@ int treeSize;
 
 int main()
 {
-    int i;
+    int i, t=1, a, b;
 	
     //Impressao logo  
     char *nome_arquivo = "imagem.txt"; //variavel que possui o nome do arquivo que carega o arquivo com o logo, autores etc
@@ -58,6 +58,7 @@ int main()
     printf("\n");
     fclose(impArq);
     printf("\n");
+   
    
 
   system("pause");
@@ -85,7 +86,7 @@ int main()
 	void compInit(){
 	  int i;
 	  for(i=0; i<n; i++){
-		componente[i]=malloc(sizeof(Componente));
+		componente[i]=(Componente *)malloc(sizeof(Componente));
 		componente[i]->prox=NULL;
 	  }
 	}
@@ -93,7 +94,7 @@ int main()
 	void compUni(int v1, int v2){
 	  
 	  Componente *Comp;
-	  Comp=malloc(sizeof(Componente));//alocacao de memoria para Componente
+	  Comp=(Componente *)malloc(sizeof(Componente));//alocacao de memoria para Componente
 	  
 	  Comp->prox=NULL;
 	  
